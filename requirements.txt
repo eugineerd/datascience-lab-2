@@ -1,0 +1,11 @@
+# dependencies
+catboost
+scikit-learn
+pandas
+seaborn
+click
+category_encoders
+python-dotenv>=0.5.1
+
+# tools
+dvc

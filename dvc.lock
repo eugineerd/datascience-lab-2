@@ -1,0 +1,23 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python -m src.data.make_dataset data/raw/train.csv data/processed/train.pkl
+    deps:
+    - path: data/raw/train.csv
+      md5: 80ccab65fb115cbad143dbbd2bcd5577
+      size: 460676
+    outs:
+    - path: data/processed/train.pkl
+      md5: a3ad6aa31cf6d1bcc2a3835320c4d76c
+      size: 627538
+  train:
+    cmd: python -m src.models.train_models data/processed/train.pkl models
+    deps:
+    - path: data/processed/train.pkl
+      md5: a3ad6aa31cf6d1bcc2a3835320c4d76c
+      size: 627538
+    outs:
+    - path: models
+      md5: a8741ec4348bcc7cb496076cde5f94d5.dir
+      size: 1281679
+      nfiles: 1

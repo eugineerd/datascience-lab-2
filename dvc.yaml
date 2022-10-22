@@ -1,0 +1,14 @@
+stages:
+  preprocess:
+    cmd: python -m src.data.make_dataset data/raw/train.csv data/processed/train.pkl
+    deps:
+    - data/raw/train.csv
+    outs:
+    - data/processed/train.pkl
+
+  train:
+    cmd: python -m src.models.train_models data/processed/train.pkl models
+    deps:
+    - data/processed/train.pkl
+    outs:
+    - models
