@@ -17,7 +17,25 @@ stages:
       md5: a3ad6aa31cf6d1bcc2a3835320c4d76c
       size: 627538
     outs:
-    - path: models
-      md5: 49775622b525c310a95f749af3419b95.dir
-      size: 2563556
-      nfiles: 2
+    - path: models/catboost_native.pkl
+      md5: f9a70475fe7af3637c248cdd2901268e
+      size: 1166714
+    - path: models/catboost_tr.pkl
+      md5: f561673c2eb64ae16eed4ae2f881ebf9
+      size: 956724
+  test:
+    cmd: python -m src.models.test_models models data/processed/train.pkl metrics/test
+    deps:
+    - path: models/catboost_native.pkl
+      md5: f9a70475fe7af3637c248cdd2901268e
+      size: 1166714
+    - path: models/catboost_tr.pkl
+      md5: f561673c2eb64ae16eed4ae2f881ebf9
+      size: 956724
+    outs:
+    - path: metrics/test/catboost_native.json
+      md5: 4bf441f7982edccf57c87b2c97e600ab
+      size: 61
+    - path: metrics/test/catboost_tr.json
+      md5: c244f7707868536a02f14ac58f1e6314
+      size: 61

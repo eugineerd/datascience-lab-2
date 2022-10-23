@@ -7,6 +7,7 @@ from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 from .catboost_models import make_catboost_pipeline
 from .common import load_train_dataset
+from src.features.feature_transformer import get_feature_transformer
 
 
 @click.command()
@@ -21,6 +22,7 @@ def main(input_filepath: str, output_filepath: str):
 
     logging.info("Loading training dataset")
     X, y = load_train_dataset(input_filepath)
+    col_tr = get_feature_transformer(X, y)
 
     logging.info("Training CatBoostRegressor with native classification")
     cb_native = make_catboost_pipeline(X, y)
@@ -29,7 +31,7 @@ def main(input_filepath: str, output_filepath: str):
         pickle.dump(cb_native, f)
 
     logging.info("Training CatBoostRegressor with transformed features")
-    cb_tr = make_catboost_pipeline(X, y)
+    cb_tr = make_catboost_pipeline(X, y, feature_tr=col_tr)
     logging.info("Saving CatBoostRegressor with transformed features")
     with open(os.path.join(output_filepath, "catboost_tr.pkl"), "wb") as f:
         pickle.dump(cb_tr, f)

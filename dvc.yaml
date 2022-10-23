@@ -11,4 +11,14 @@ stages:
     deps:
     - data/processed/train.pkl
     outs:
-    - models
+    - models/catboost_native.pkl
+    - models/catboost_tr.pkl
+
+  test:
+    cmd: python -m src.models.test_models models data/processed/train.pkl metrics/test
+    deps:
+    - models/catboost_native.pkl
+    - models/catboost_tr.pkl
+    metrics:
+    - metrics/test/catboost_native.json
+    - metrics/test/catboost_tr.json
