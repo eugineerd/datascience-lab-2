@@ -6,6 +6,10 @@ from src.models.common import default_train_split
 from typing import Any, Dict, List, Optional, Tuple
 import src.cfg as cfg
 
+import warnings
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
+
 
 def make_catboost_pipeline(
     X: pd.DataFrame,
