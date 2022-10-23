@@ -17,7 +17,7 @@ from .common import get_model_metrics, load_train_dataset, default_train_split
 @click.argument("output_filepath", type=click.Path())
 def main(models_dir: str, train_dataset_filepath: str, output_filepath: str):
     logger = logging.getLogger(__name__)
-    logger.info("Testing models...")
+    logger.info("Predicting test models...")
 
     if not os.path.exists(output_filepath):
         logger.info(f"'{output_filepath}' not found, creating")
@@ -25,17 +25,16 @@ def main(models_dir: str, train_dataset_filepath: str, output_filepath: str):
 
     logging.info("Loading dataset")
     X, y = load_train_dataset(train_dataset_filepath)
-    _, X_test, _, y_test = default_train_split(X, y)
+    _, X_test, _, _ = default_train_split(X, y)
 
     for model_path in Path(models_dir).glob("*.pkl"):
         model_name = model_path.name.rsplit(".", 1)[0]
         logging.info(f"Testing {model_name}")
         with open(model_path, "rb") as f:
             reg: Pipeline = pickle.load(f)
-        y_pred = reg.predict(X_test)
-        metrics = get_model_metrics(y_test, y_pred)
+        y_pred = list(reg.predict(X_test))
         with open(Path(output_filepath).joinpath(f"{model_name}.json"), "w") as f:
-            json.dump(metrics, f)
+            json.dump(y_pred, f)
 
     logging.info("Complete")
 

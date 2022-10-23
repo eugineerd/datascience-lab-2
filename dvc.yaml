@@ -9,10 +9,10 @@ stages:
     - data/processed/train.pkl
 
   train:
-    cmd: python -m src.models.train_models data/processed/train.pkl models
+    cmd: python -m src.models.run_train_models data/processed/train.pkl models
     deps:
     - src/models/common.py
-    - src/models/train_models.py
+    - src/models/run_train_models.py
     - src/models/catboost_models.py
     - src/models/sklearn_models.py
     - data/processed/train.pkl
@@ -21,14 +21,30 @@ stages:
     - models/catboost_tr.pkl
     - models/extra_trees.pkl
 
-  test:
-    cmd: python -m src.models.test_models models data/processed/train.pkl metrics/test
+  predict_test:
+    cmd: python -m src.models.run_predict_test models data/processed/train.pkl predictions/test
     deps:
     - src/models/common.py
-    - src/models/test_models.py
+    - src/models/run_predict_test.py
     - models/catboost_native.pkl
     - models/catboost_tr.pkl
     - models/extra_trees.pkl
+    outs:
+    - predictions/test/catboost_native.json
+    - predictions/test/catboost_tr.json
+    - predictions/test/extra_trees.json
+  
+  score_test:
+    cmd: python -m src.models.run_score_test models predictions/test data/processed/train.pkl metrics/test
+    deps:
+    - src/models/common.py
+    - src/models/run_score_test.py
+    - models/catboost_native.pkl
+    - models/catboost_tr.pkl
+    - models/extra_trees.pkl
+    - predictions/test/catboost_native.json
+    - predictions/test/catboost_tr.json
+    - predictions/test/extra_trees.json
     metrics:
     - metrics/test/catboost_native.json
     - metrics/test/catboost_tr.json

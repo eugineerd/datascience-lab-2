@@ -18,7 +18,7 @@ def make_extra_trees_pipeline(
             (
                 "reg",
                 ExtraTreesRegressor(
-                    verbose=1, random_state=cfg.RS, n_estimators=100, n_jobs=-1
+                    verbose=0, random_state=cfg.RS, n_estimators=100, n_jobs=-1
                 ),
             ),
         ]
