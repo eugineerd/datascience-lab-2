@@ -4,7 +4,7 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 
-def get_category_encoder(X: pd.DataFrame, y: pd.DataFrame) -> ColumnTransformer:
+def get_feature_transformer(X: pd.DataFrame, y: pd.DataFrame) -> ColumnTransformer:
     ord_mapping = [
         {
             "col": "LotShape",

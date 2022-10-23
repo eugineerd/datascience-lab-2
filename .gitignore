@@ -91,3 +91,4 @@ data/*
 
 *.pkl
 **/catboost_info
+/models

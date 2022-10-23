@@ -18,6 +18,6 @@ stages:
       size: 627538
     outs:
     - path: models
-      md5: a8741ec4348bcc7cb496076cde5f94d5.dir
-      size: 1281679
-      nfiles: 1
+      md5: 49775622b525c310a95f749af3419b95.dir
+      size: 2563556
+      nfiles: 2
