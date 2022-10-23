@@ -222,12 +222,16 @@ def get_feature_transformer(X: pd.DataFrame, y: pd.DataFrame) -> ColumnTransform
             ("real", StandardScaler(), list(real_features)),
             (
                 "ord",
-                OrdinalEncoder(handle_unknown=-1, mapping=ord_mapping),  # type: ignore
+                OrdinalEncoder(handle_unknown="value", handle_missing="error", mapping=ord_mapping),  # type: ignore
                 list(ord_features),
             ),
-            ("cat", OneHotEncoder(handle_unknown="value"), list(cat_features)),
+            (
+                "cat",
+                OneHotEncoder(handle_unknown="value", handle_missing="error"),
+                list(cat_features),
+            ),
         ],
-        remainder="passthrough",
+        remainder="drop",
     )
     col_tr.fit(X, y)
     return col_tr

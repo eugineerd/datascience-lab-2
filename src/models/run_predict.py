@@ -8,28 +8,37 @@ from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import r2_score
-from .common import get_model_metrics, load_train_dataset, default_train_split
+from .common import get_model_metrics, load_dataset, default_train_split
 
 
 @click.command()
 @click.argument("models_dir", type=click.Path(exists=True))
 @click.argument("train_dataset_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
-def main(models_dir: str, train_dataset_filepath: str, output_filepath: str):
+@click.option("--split", default=True)
+def main(
+    models_dir: str,
+    train_dataset_filepath: str,
+    output_filepath: str,
+    split: bool,
+):
     logger = logging.getLogger(__name__)
-    logger.info("Predicting test models...")
+    logger.info("Predicting models...")
 
     if not os.path.exists(output_filepath):
         logger.info(f"'{output_filepath}' not found, creating")
         os.mkdir(output_filepath)
 
     logging.info("Loading dataset")
-    X, y = load_train_dataset(train_dataset_filepath)
-    _, X_test, _, _ = default_train_split(X, y)
+    X, y = load_dataset(train_dataset_filepath)
+    if split:
+        _, X_test, _, _ = default_train_split(X, y)
+    else:
+        X_test = X
 
     for model_path in Path(models_dir).glob("*.pkl"):
         model_name = model_path.name.rsplit(".", 1)[0]
-        logging.info(f"Testing {model_name}")
+        logging.info(f"Predicting {model_name}")
         with open(model_path, "rb") as f:
             reg: Pipeline = pickle.load(f)
         y_pred = list(reg.predict(X_test))

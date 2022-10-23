@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import Optional
 import click
 import logging
 import os
@@ -14,7 +15,10 @@ from src.data.preprocess import preprocess
 @click.command()
 @click.argument("input_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
-def main(input_filepath: str, output_filepath: str):
+@click.option("--input_answers", type=click.Path(exists=True), default=None)
+def main(
+    input_filepath: str, output_filepath: str, input_answers: Optional[str] = None
+):
     """Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
     """
@@ -23,6 +27,10 @@ def main(input_filepath: str, output_filepath: str):
 
     logging.info("Loading dataset")
     df = pd.read_csv(input_filepath)
+    if input_answers != None:
+        df_y = pd.read_csv(input_answers)
+        df_y = df_y.drop("Id", axis=1)
+        df = pd.concat([df, df_y], axis=1)
     logging.info("Processing dataset")
     df = preprocess(df)
     logging.info("Saving dataset")

@@ -1,5 +1,5 @@
 stages:
-  preprocess:
+  preprocess_train:
     cmd: python -m src.data.make_dataset data/raw/train.csv data/processed/train.pkl
     deps:
     - src/data/make_dataset.py
@@ -8,11 +8,22 @@ stages:
     outs:
     - data/processed/train.pkl
 
+  preprocess_test:
+    cmd: python -m src.data.make_dataset data/raw/test.csv data/processed/test.pkl --input_answers=data/raw/sample_submission.csv
+    deps:
+    - src/data/make_dataset.py
+    - src/data/preprocess.py
+    - data/raw/test.csv
+    - data/raw/sample_submission.csv
+    outs:
+    - data/processed/test.pkl
+
   train:
-    cmd: python -m src.models.run_train_models data/processed/train.pkl models
+    cmd: python -m src.models.run_train data/processed/train.pkl models
     deps:
     - src/models/common.py
-    - src/models/run_train_models.py
+    - src/models/run_train.py
+    - src/features/feature_transformer.py
     - src/models/catboost_models.py
     - src/models/sklearn_models.py
     - data/processed/train.pkl
@@ -22,10 +33,10 @@ stages:
     - models/extra_trees.pkl
 
   predict_test:
-    cmd: python -m src.models.run_predict_test models data/processed/train.pkl predictions/test
+    cmd: python -m src.models.run_predict models data/processed/train.pkl predictions/test
     deps:
     - src/models/common.py
-    - src/models/run_predict_test.py
+    - src/models/run_predict.py
     - models/catboost_native.pkl
     - models/catboost_tr.pkl
     - models/extra_trees.pkl
@@ -35,13 +46,10 @@ stages:
     - predictions/test/extra_trees.json
   
   score_test:
-    cmd: python -m src.models.run_score_test models predictions/test data/processed/train.pkl metrics/test
+    cmd: python -m src.models.run_score predictions/test data/processed/train.pkl metrics/test
     deps:
     - src/models/common.py
-    - src/models/run_score_test.py
-    - models/catboost_native.pkl
-    - models/catboost_tr.pkl
-    - models/extra_trees.pkl
+    - src/models/run_score.py
     - predictions/test/catboost_native.json
     - predictions/test/catboost_tr.json
     - predictions/test/extra_trees.json
@@ -49,3 +57,29 @@ stages:
     - metrics/test/catboost_native.json
     - metrics/test/catboost_tr.json
     - metrics/test/extra_trees.json
+
+  predict_validate:
+    cmd: python -m src.models.run_predict models data/processed/test.pkl predictions/validate --split=False
+    deps:
+    - src/models/common.py
+    - src/models/run_predict.py
+    - models/catboost_native.pkl
+    - models/catboost_tr.pkl
+    - models/extra_trees.pkl
+    outs:
+    - predictions/validate/catboost_native.json
+    - predictions/validate/catboost_tr.json
+    - predictions/validate/extra_trees.json
+  
+  score_validate:
+    cmd: python -m src.models.run_score predictions/validate data/processed/test.pkl metrics/validate --split=False
+    deps:
+    - src/models/common.py
+    - src/models/run_score.py
+    - predictions/validate/catboost_native.json
+    - predictions/validate/catboost_tr.json
+    - predictions/validate/extra_trees.json
+    metrics:
+    - metrics/validate/catboost_native.json
+    - metrics/validate/catboost_tr.json
+    - metrics/validate/extra_trees.json

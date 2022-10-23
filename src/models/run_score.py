@@ -8,39 +8,38 @@ from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import r2_score
-from .common import get_model_metrics, load_train_dataset, default_train_split
+from .common import get_model_metrics, load_dataset, default_train_split
 
 
 @click.command()
-@click.argument("models_dir", type=click.Path(exists=True))
 @click.argument("predictions_filepath", type=click.Path(exists=True))
-@click.argument("train_dataset_filepath", type=click.Path(exists=True))
+@click.argument("dataset_filepath", type=click.Path(exists=True))
 @click.argument("output_filepath", type=click.Path())
+@click.option("--split", default=True)
 def main(
-    models_dir: str,
     predictions_filepath: str,
-    train_dataset_filepath: str,
+    dataset_filepath: str,
     output_filepath: str,
+    split: bool,
 ):
     logger = logging.getLogger(__name__)
-    logger.info("Testing models...")
-    X, y = load_train_dataset(train_dataset_filepath)
-    _, _, _, y_test = default_train_split(X, y)
+    logger.info("Scoring models...")
+    X, y = load_dataset(dataset_filepath)
+    if split:
+        _, _, _, y_test = default_train_split(X, y)
+    else:
+        y_test = y
 
     if not os.path.exists(output_filepath):
         logger.info(f"'{output_filepath}' not found, creating")
         os.mkdir(output_filepath)
 
-    for model_path in Path(models_dir).glob("*.pkl"):
-        model_name = model_path.name.rsplit(".", 1)[0]
-        predictions_path = Path(predictions_filepath).joinpath(f"{model_name}.json")
-        logging.info(f"Testing {model_name}")
-        with open(model_path, "rb") as f:
-            reg: Pipeline = pickle.load(f)
+    for predictions_path in Path(predictions_filepath).glob("*.json"):
+        logging.info(f"Testing {predictions_path.name}")
         with open(predictions_path, "r") as f:
             y_pred = json.load(f)
         metrics = get_model_metrics(y_test, y_pred)
-        with open(Path(output_filepath).joinpath(f"{model_name}.json"), "w") as f:
+        with open(Path(output_filepath).joinpath(predictions_path.name), "w") as f:
             json.dump(metrics, f)
 
     logging.info("Complete")

@@ -8,7 +8,7 @@ from dotenv import find_dotenv, load_dotenv
 
 from src.models.sklearn_models import make_extra_trees_pipeline
 from .catboost_models import make_catboost_pipeline
-from .common import load_train_dataset
+from .common import load_dataset
 from src.features.feature_transformer import get_feature_transformer
 
 
@@ -23,7 +23,7 @@ def main(input_filepath: str, output_filepath: str):
         os.mkdir(output_filepath)
 
     logging.info("Loading training dataset")
-    X, y = load_train_dataset(input_filepath)
+    X, y = load_dataset(input_filepath)
     col_tr = get_feature_transformer(X, y)
 
     logging.info("Training CatBoostRegressor with native classification")

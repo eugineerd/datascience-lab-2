@@ -14,7 +14,7 @@ def default_train_split(
     return train_test_split(X, y, test_size=0.2, random_state=cfg.RS)  # type: ignore
 
 
-def load_train_dataset(path: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def load_dataset(path: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
     with open(path, "rb") as f:
         df = pickle.load(f)
     X = df.drop(["SalePrice"], axis=1)
