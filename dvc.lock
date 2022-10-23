@@ -18,24 +18,33 @@ stages:
       size: 627538
     outs:
     - path: models/catboost_native.pkl
-      md5: f9a70475fe7af3637c248cdd2901268e
+      md5: 645afca4305696a182f48c82d8870436
       size: 1166714
     - path: models/catboost_tr.pkl
-      md5: f561673c2eb64ae16eed4ae2f881ebf9
-      size: 956724
+      md5: 86a7311b29396a20484ca2a008d7ac75
+      size: 956668
+    - path: models/extra_trees.pkl
+      md5: 69dd3b91768282ea2c5bad441631de95
+      size: 14584173
   test:
     cmd: python -m src.models.test_models models data/processed/train.pkl metrics/test
     deps:
     - path: models/catboost_native.pkl
-      md5: f9a70475fe7af3637c248cdd2901268e
+      md5: 645afca4305696a182f48c82d8870436
       size: 1166714
     - path: models/catboost_tr.pkl
-      md5: f561673c2eb64ae16eed4ae2f881ebf9
-      size: 956724
+      md5: 86a7311b29396a20484ca2a008d7ac75
+      size: 956668
+    - path: models/extra_trees.pkl
+      md5: 69dd3b91768282ea2c5bad441631de95
+      size: 14584173
     outs:
     - path: metrics/test/catboost_native.json
       md5: 4bf441f7982edccf57c87b2c97e600ab
       size: 61
     - path: metrics/test/catboost_tr.json
-      md5: c244f7707868536a02f14ac58f1e6314
+      md5: fcc6e91a16fd4089b9cbc1f993f3e47e
+      size: 60
+    - path: metrics/test/extra_trees.json
+      md5: b3293c38b0cce32104821a47fa57160f
       size: 61

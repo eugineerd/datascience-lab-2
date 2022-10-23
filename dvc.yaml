@@ -13,12 +13,15 @@ stages:
     outs:
     - models/catboost_native.pkl
     - models/catboost_tr.pkl
+    - models/extra_trees.pkl
 
   test:
     cmd: python -m src.models.test_models models data/processed/train.pkl metrics/test
     deps:
     - models/catboost_native.pkl
     - models/catboost_tr.pkl
+    - models/extra_trees.pkl
     metrics:
     - metrics/test/catboost_native.json
     - metrics/test/catboost_tr.json
+    - metrics/test/extra_trees.json

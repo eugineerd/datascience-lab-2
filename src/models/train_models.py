@@ -5,6 +5,8 @@ import os
 import pandas as pd
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
+
+from src.models.sklearn_models import make_extra_trees_pipeline
 from .catboost_models import make_catboost_pipeline
 from .common import load_train_dataset
 from src.features.feature_transformer import get_feature_transformer
@@ -35,6 +37,12 @@ def main(input_filepath: str, output_filepath: str):
     logging.info("Saving CatBoostRegressor with transformed features")
     with open(os.path.join(output_filepath, "catboost_tr.pkl"), "wb") as f:
         pickle.dump(cb_tr, f)
+
+    logging.info("Training ExtraTreesRegressor")
+    et = make_extra_trees_pipeline(X, y, col_tr)
+    logging.info("Saving ExtraTreesRegressor")
+    with open(os.path.join(output_filepath, "extra_trees.pkl"), "wb") as f:
+        pickle.dump(et, f)
 
     logging.info("Complete")
 
