@@ -54,8 +54,8 @@ stages:
     - predictions/test/catboost_tr.json
     - predictions/test/extra_trees.json
     metrics:
-    - metrics/test/catboost_native.json
     - metrics/test/catboost_tr.json
+    - metrics/test/catboost_native.json
     - metrics/test/extra_trees.json
 
   predict_validate:
@@ -80,6 +80,6 @@ stages:
     - predictions/validate/catboost_tr.json
     - predictions/validate/extra_trees.json
     metrics:
-    - metrics/validate/catboost_native.json
     - metrics/validate/catboost_tr.json
+    - metrics/validate/catboost_native.json
     - metrics/validate/extra_trees.json
