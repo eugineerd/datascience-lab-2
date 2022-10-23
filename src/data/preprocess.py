@@ -5,7 +5,7 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     df = df.set_index("Id")
     df = df.drop("PoolQC", axis=1)  # not enough samples
     df = df.dropna(subset=["Electrical"])
-    df["MasVnrArea"] = df["MasVnrType"].replace(
+    df["MasVnrType"] = df["MasVnrType"].replace(
         "None", pd.NA
     )  # Might as well treat None and NA the same
 

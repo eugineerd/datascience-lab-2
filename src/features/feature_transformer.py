@@ -20,7 +20,7 @@ def get_feature_transformer(X: pd.DataFrame, y: pd.DataFrame) -> ColumnTransform
             "mapping": {
                 "AllPub": 3,
                 "NoSewr": 2,
-                "SoSeWa": 1,
+                "NoSeWa": 1,
                 "ELO": 0,
             },
         },
