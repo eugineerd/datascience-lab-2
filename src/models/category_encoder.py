@@ -1,5 +1,6 @@
 from sklearn.compose import ColumnTransformer
-from category_encoders import OrdinalEncoder, OneHotEncoder, CatBoostEncoder
+from category_encoders import OrdinalEncoder, OneHotEncoder
+from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 
@@ -214,17 +215,19 @@ def get_category_encoder(X: pd.DataFrame, y: pd.DataFrame) -> ColumnTransformer:
     ]
     ord_features = set(x["col"] for x in ord_mapping)
     cat_features = set(X.columns[X.dtypes == "object"]).difference(ord_features)
+    real_features = set(X.columns).difference((ord_features.union(cat_features)))
 
-    # Somehow this actually makes things worse...
     col_tr = ColumnTransformer(
         transformers=[
-            ("cat", CatBoostEncoder(handle_unknown="value"), list(cat_features)),
+            ("real", StandardScaler(), list(real_features)),
             (
                 "ord",
                 OrdinalEncoder(handle_unknown=-1, mapping=ord_mapping),  # type: ignore
                 list(ord_features),
             ),
-        ]
+            ("cat", OneHotEncoder(handle_unknown="value"), list(cat_features)),
+        ],
+        remainder="passthrough",
     )
     col_tr.fit(X, y)
     return col_tr
