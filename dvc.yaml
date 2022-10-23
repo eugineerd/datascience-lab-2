@@ -2,6 +2,8 @@ stages:
   preprocess:
     cmd: python -m src.data.make_dataset data/raw/train.csv data/processed/train.pkl
     deps:
+    - src/data/make_dataset.py
+    - src/data/preprocess.py
     - data/raw/train.csv
     outs:
     - data/processed/train.pkl
@@ -9,6 +11,10 @@ stages:
   train:
     cmd: python -m src.models.train_models data/processed/train.pkl models
     deps:
+    - src/models/common.py
+    - src/models/train_models.py
+    - src/models/catboost_models.py
+    - src/models/sklearn_models.py
     - data/processed/train.pkl
     outs:
     - models/catboost_native.pkl
@@ -18,6 +24,8 @@ stages:
   test:
     cmd: python -m src.models.test_models models data/processed/train.pkl metrics/test
     deps:
+    - src/models/common.py
+    - src/models/test_models.py
     - models/catboost_native.pkl
     - models/catboost_tr.pkl
     - models/extra_trees.pkl

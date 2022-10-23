@@ -6,45 +6,69 @@ stages:
     - path: data/raw/train.csv
       md5: 80ccab65fb115cbad143dbbd2bcd5577
       size: 460676
+    - path: src/data/make_dataset.py
+      md5: c6369db8c261e01ce00b3fc2def9571c
+      size: 1435
+    - path: src/data/preprocess.py
+      md5: 37211625065c2e4234244845d5b71951
+      size: 1557
     outs:
     - path: data/processed/train.pkl
-      md5: a3ad6aa31cf6d1bcc2a3835320c4d76c
-      size: 627538
+      md5: fc6ba6812778a1fdfad86abe8a1cb8ed
+      size: 631913
   train:
     cmd: python -m src.models.train_models data/processed/train.pkl models
     deps:
     - path: data/processed/train.pkl
-      md5: a3ad6aa31cf6d1bcc2a3835320c4d76c
-      size: 627538
+      md5: fc6ba6812778a1fdfad86abe8a1cb8ed
+      size: 631913
+    - path: src/models/catboost_models.py
+      md5: 6bd771151ca36aee751225bc8e11fb1a
+      size: 1198
+    - path: src/models/common.py
+      md5: 9df422a4d80965bdbeedbde2c94b7bd9
+      size: 858
+    - path: src/models/sklearn_models.py
+      md5: 7e111807374f920af957d1f5b371f935
+      size: 803
+    - path: src/models/train_models.py
+      md5: 6aaafc5144aad5177c21756a74e63c51
+      size: 2268
     outs:
     - path: models/catboost_native.pkl
-      md5: 645afca4305696a182f48c82d8870436
-      size: 1166714
+      md5: 2b8e797a8ad5275e970714155491b5c2
+      size: 1147669
     - path: models/catboost_tr.pkl
-      md5: 86a7311b29396a20484ca2a008d7ac75
-      size: 956668
+      md5: 3bb0fe44320846e61c5fe0b8f354b307
+      size: 955418
     - path: models/extra_trees.pkl
-      md5: 69dd3b91768282ea2c5bad441631de95
-      size: 14584173
+      md5: 73b2c39b7dd052d69a9d32fea6bb0fee
+      size: 14579839
   test:
     cmd: python -m src.models.test_models models data/processed/train.pkl metrics/test
     deps:
     - path: models/catboost_native.pkl
-      md5: 645afca4305696a182f48c82d8870436
-      size: 1166714
+      md5: 2b8e797a8ad5275e970714155491b5c2
+      size: 1147669
     - path: models/catboost_tr.pkl
-      md5: 86a7311b29396a20484ca2a008d7ac75
-      size: 956668
+      md5: 3bb0fe44320846e61c5fe0b8f354b307
+      size: 955418
     - path: models/extra_trees.pkl
-      md5: 69dd3b91768282ea2c5bad441631de95
-      size: 14584173
+      md5: 73b2c39b7dd052d69a9d32fea6bb0fee
+      size: 14579839
+    - path: src/models/common.py
+      md5: 9df422a4d80965bdbeedbde2c94b7bd9
+      size: 858
+    - path: src/models/test_models.py
+      md5: cd0716cbb380839a022d54a16952ec4c
+      size: 1895
     outs:
     - path: metrics/test/catboost_native.json
-      md5: 4bf441f7982edccf57c87b2c97e600ab
+      md5: 894cc2b62e1e0949db23016a77085f72
       size: 61
     - path: metrics/test/catboost_tr.json
-      md5: fcc6e91a16fd4089b9cbc1f993f3e47e
+      md5: 22828b20a4fd0caa10536c6b9ca1f981
       size: 60
     - path: metrics/test/extra_trees.json
-      md5: b3293c38b0cce32104821a47fa57160f
+      md5: fb97bbd107816fa37f79c51197eaf6de
       size: 61
