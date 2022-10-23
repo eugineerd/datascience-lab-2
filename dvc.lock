@@ -78,6 +78,9 @@ stages:
   predict_test:
     cmd: python -m src.models.run_predict models data/processed/train.pkl predictions/test
     deps:
+    - path: data/processed/train.pkl
+      md5: fc6ba6812778a1fdfad86abe8a1cb8ed
+      size: 631913
     - path: models/catboost_native.pkl
       md5: 162382be9e24c6ba3700dcac5ac57398
       size: 1147669
@@ -107,6 +110,9 @@ stages:
     cmd: python -m src.models.run_score predictions/test data/processed/train.pkl
       metrics/test
     deps:
+    - path: data/processed/train.pkl
+      md5: fc6ba6812778a1fdfad86abe8a1cb8ed
+      size: 631913
     - path: predictions/test/catboost_native.json
       md5: b05a5de95c0472676a9f9c486aaf7473
       size: 5726
@@ -152,6 +158,9 @@ stages:
     cmd: python -m src.models.run_predict models data/processed/test.pkl predictions/validate
       --split=False
     deps:
+    - path: data/processed/validate.pkl
+      md5: f827e907b32666ec83af08819d4560b1
+      size: 645588
     - path: models/catboost_native.pkl
       md5: 162382be9e24c6ba3700dcac5ac57398
       size: 1147669
@@ -181,6 +190,9 @@ stages:
     cmd: python -m src.models.run_score predictions/validate data/processed/test.pkl
       metrics/validate --split=False
     deps:
+    - path: data/processed/validate.pkl
+      md5: f827e907b32666ec83af08819d4560b1
+      size: 645588
     - path: predictions/validate/catboost_native.json
       md5: 3feb2c2185e42551509edc6d26720e83
       size: 28643
@@ -206,3 +218,23 @@ stages:
     - path: metrics/validate/extra_trees.json
       md5: 92dbc9251ca55a55802555e957053821
       size: 60
+  preprocess_validate:
+    cmd: python -m src.data.make_dataset data/raw/test.csv data/processed/validate.pkl
+      --input_answers=data/raw/sample_submission.csv
+    deps:
+    - path: data/raw/sample_submission.csv
+      md5: 8aaef0958e4b35b6f33723a4eb726c23
+      size: 31939
+    - path: data/raw/test.csv
+      md5: dcec4b79bf9c7317bd9e17789bf888f0
+      size: 451405
+    - path: src/data/make_dataset.py
+      md5: 0ab7499d19a70f7ab86317938ae576c8
+      size: 1737
+    - path: src/data/preprocess.py
+      md5: 37211625065c2e4234244845d5b71951
+      size: 1557
+    outs:
+    - path: data/processed/validate.pkl
+      md5: f827e907b32666ec83af08819d4560b1
+      size: 645588

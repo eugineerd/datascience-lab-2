@@ -8,15 +8,15 @@ stages:
     outs:
     - data/processed/train.pkl
 
-  preprocess_test:
-    cmd: python -m src.data.make_dataset data/raw/test.csv data/processed/test.pkl --input_answers=data/raw/sample_submission.csv
+  preprocess_validate:
+    cmd: python -m src.data.make_dataset data/raw/test.csv data/processed/validate.pkl --input_answers=data/raw/sample_submission.csv
     deps:
     - src/data/make_dataset.py
     - src/data/preprocess.py
     - data/raw/test.csv
     - data/raw/sample_submission.csv
     outs:
-    - data/processed/test.pkl
+    - data/processed/validate.pkl
 
   train:
     cmd: python -m src.models.run_train data/processed/train.pkl models
@@ -37,6 +37,7 @@ stages:
     deps:
     - src/models/common.py
     - src/models/run_predict.py
+    - data/processed/train.pkl
     - models/catboost_native.pkl
     - models/catboost_tr.pkl
     - models/extra_trees.pkl
@@ -50,6 +51,7 @@ stages:
     deps:
     - src/models/common.py
     - src/models/run_score.py
+    - data/processed/train.pkl
     - predictions/test/catboost_native.json
     - predictions/test/catboost_tr.json
     - predictions/test/extra_trees.json
@@ -63,6 +65,7 @@ stages:
     deps:
     - src/models/common.py
     - src/models/run_predict.py
+    - data/processed/validate.pkl
     - models/catboost_native.pkl
     - models/catboost_tr.pkl
     - models/extra_trees.pkl
@@ -76,6 +79,7 @@ stages:
     deps:
     - src/models/common.py
     - src/models/run_score.py
+    - data/processed/validate.pkl
     - predictions/validate/catboost_native.json
     - predictions/validate/catboost_tr.json
     - predictions/validate/extra_trees.json
