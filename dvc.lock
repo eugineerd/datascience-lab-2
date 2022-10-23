@@ -20,14 +20,14 @@ stages:
     cmd: python -m src.models.run_train data/processed/train.pkl models
     deps:
     - path: data/processed/train.pkl
-      md5: fc6ba6812778a1fdfad86abe8a1cb8ed
-      size: 631913
+      md5: 75b2cdb7fae32f96fabaca9d92c43a12
+      size: 495157
     - path: src/features/feature_transformer.py
       md5: d153e4e79632235c9adadce3307a7166
       size: 5712
     - path: src/models/catboost_models.py
-      md5: 6bd771151ca36aee751225bc8e11fb1a
-      size: 1198
+      md5: d146a2734e51c63d1e943beb049b9764
+      size: 1377
     - path: src/models/common.py
       md5: ecdb47b691bf5bcc2b0601e78c72f09e
       size: 852
@@ -35,18 +35,18 @@ stages:
       md5: 25f86ddd2237c9425a9638d0962915bb
       size: 2256
     - path: src/models/sklearn_models.py
-      md5: 71011f912fd43f711b524e5991a8d030
-      size: 742
+      md5: 68127603e64d7793c6ef48523052e3c0
+      size: 1031
     outs:
     - path: models/catboost_native.pkl
-      md5: 162382be9e24c6ba3700dcac5ac57398
-      size: 1147669
+      md5: 031f0adede5810ffefbccd7bc8a8a648
+      size: 514487
     - path: models/catboost_tr.pkl
-      md5: 21e604429da5e88c25104b7399e1d3ab
-      size: 953035
+      md5: cb0821fa61aae5fb9c5b1f0805dbab8f
+      size: 742450
     - path: models/extra_trees.pkl
-      md5: ee6c78ebb18f1feed4b3528fe492e460
-      size: 14599216
+      md5: b964a26a967154643427fe956449c7d9
+      size: 6578454
   test:
     cmd: python -m src.models.test_models models data/processed/train.pkl metrics/test
     deps:
@@ -79,17 +79,17 @@ stages:
     cmd: python -m src.models.run_predict models data/processed/train.pkl predictions/test
     deps:
     - path: data/processed/train.pkl
-      md5: fc6ba6812778a1fdfad86abe8a1cb8ed
-      size: 631913
+      md5: 75b2cdb7fae32f96fabaca9d92c43a12
+      size: 495157
     - path: models/catboost_native.pkl
-      md5: 162382be9e24c6ba3700dcac5ac57398
-      size: 1147669
+      md5: 031f0adede5810ffefbccd7bc8a8a648
+      size: 514487
     - path: models/catboost_tr.pkl
-      md5: 21e604429da5e88c25104b7399e1d3ab
-      size: 953035
+      md5: cb0821fa61aae5fb9c5b1f0805dbab8f
+      size: 742450
     - path: models/extra_trees.pkl
-      md5: ee6c78ebb18f1feed4b3528fe492e460
-      size: 14599216
+      md5: b964a26a967154643427fe956449c7d9
+      size: 6578454
     - path: src/models/common.py
       md5: ecdb47b691bf5bcc2b0601e78c72f09e
       size: 852
@@ -98,30 +98,30 @@ stages:
       size: 1955
     outs:
     - path: predictions/test/catboost_native.json
-      md5: b05a5de95c0472676a9f9c486aaf7473
-      size: 5726
+      md5: 843dc66585c9a076f65db8225dc36715
+      size: 4568
     - path: predictions/test/catboost_tr.json
-      md5: 7fb9df2451514cd99d298259ad40d7b3
-      size: 5713
+      md5: 4b37e73e5cd5f0455bbda54c0b09e4dc
+      size: 4592
     - path: predictions/test/extra_trees.json
-      md5: 14e3739efbbc9ca80156e8608bbdab0e
-      size: 3098
+      md5: 4f242278434d0c866bb2419b2eadab0d
+      size: 4366
   score_test:
     cmd: python -m src.models.run_score predictions/test data/processed/train.pkl
       metrics/test
     deps:
     - path: data/processed/train.pkl
-      md5: fc6ba6812778a1fdfad86abe8a1cb8ed
-      size: 631913
+      md5: 75b2cdb7fae32f96fabaca9d92c43a12
+      size: 495157
     - path: predictions/test/catboost_native.json
-      md5: b05a5de95c0472676a9f9c486aaf7473
-      size: 5726
+      md5: 843dc66585c9a076f65db8225dc36715
+      size: 4568
     - path: predictions/test/catboost_tr.json
-      md5: 7fb9df2451514cd99d298259ad40d7b3
-      size: 5713
+      md5: 4b37e73e5cd5f0455bbda54c0b09e4dc
+      size: 4592
     - path: predictions/test/extra_trees.json
-      md5: 14e3739efbbc9ca80156e8608bbdab0e
-      size: 3098
+      md5: 4f242278434d0c866bb2419b2eadab0d
+      size: 4366
     - path: src/models/common.py
       md5: ecdb47b691bf5bcc2b0601e78c72f09e
       size: 852
@@ -130,46 +130,50 @@ stages:
       size: 1894
     outs:
     - path: metrics/test/catboost_native.json
-      md5: 894cc2b62e1e0949db23016a77085f72
+      md5: a260ef620db59cf5f593f36ebcbcda3e
       size: 61
     - path: metrics/test/catboost_tr.json
-      md5: 1f12aedb088ff2527c44ffab6b900e02
+      md5: 2fabcdaaeb8c1272af0b429f38191e2a
       size: 61
     - path: metrics/test/extra_trees.json
-      md5: 528c31cb9f8c89b2f7e5149afd53446a
-      size: 61
+      md5: 370ba49153e29f7ff79e69a5be1a0262
+      size: 62
   preprocess_train:
     cmd: python -m src.data.make_dataset data/raw/train.csv data/processed/train.pkl
+      data/processed/validate.pkl
     deps:
     - path: data/raw/train.csv
       md5: 80ccab65fb115cbad143dbbd2bcd5577
       size: 460676
     - path: src/data/make_dataset.py
-      md5: 0ab7499d19a70f7ab86317938ae576c8
-      size: 1737
+      md5: ad018f41ceffc8f59b1a6ea813cfe4c9
+      size: 1817
     - path: src/data/preprocess.py
       md5: 37211625065c2e4234244845d5b71951
       size: 1557
     outs:
     - path: data/processed/train.pkl
-      md5: fc6ba6812778a1fdfad86abe8a1cb8ed
-      size: 631913
+      md5: 75b2cdb7fae32f96fabaca9d92c43a12
+      size: 495157
+    - path: data/processed/validate.pkl
+      md5: c7bd027b801b135c90ea874d81fe0e99
+      size: 123060
   predict_validate:
-    cmd: python -m src.models.run_predict models data/processed/test.pkl predictions/validate
+    cmd: python -m src.models.run_predict models data/processed/validate.pkl predictions/validate
       --split=False
     deps:
     - path: data/processed/validate.pkl
-      md5: f827e907b32666ec83af08819d4560b1
-      size: 645588
+      md5: c7bd027b801b135c90ea874d81fe0e99
+      size: 123060
     - path: models/catboost_native.pkl
-      md5: 162382be9e24c6ba3700dcac5ac57398
-      size: 1147669
+      md5: 031f0adede5810ffefbccd7bc8a8a648
+      size: 514487
     - path: models/catboost_tr.pkl
-      md5: 21e604429da5e88c25104b7399e1d3ab
-      size: 953035
+      md5: cb0821fa61aae5fb9c5b1f0805dbab8f
+      size: 742450
     - path: models/extra_trees.pkl
-      md5: ee6c78ebb18f1feed4b3528fe492e460
-      size: 14599216
+      md5: b964a26a967154643427fe956449c7d9
+      size: 6578454
     - path: src/models/common.py
       md5: ecdb47b691bf5bcc2b0601e78c72f09e
       size: 852
@@ -178,30 +182,30 @@ stages:
       size: 1955
     outs:
     - path: predictions/validate/catboost_native.json
-      md5: 3feb2c2185e42551509edc6d26720e83
-      size: 28643
+      md5: 164d7e904d1d804db04cb0312c408a54
+      size: 5721
     - path: predictions/validate/catboost_tr.json
-      md5: 7dc0b277648a2571ca87098e5541b5f3
-      size: 28609
+      md5: a5845dee409816dde797fa61c623efc4
+      size: 5709
     - path: predictions/validate/extra_trees.json
-      md5: f634e955f7469207dd99df9a6df34614
-      size: 15548
+      md5: 37c90d88a0f67e9d851180f9056a743a
+      size: 5442
   score_validate:
-    cmd: python -m src.models.run_score predictions/validate data/processed/test.pkl
+    cmd: python -m src.models.run_score predictions/validate data/processed/validate.pkl
       metrics/validate --split=False
     deps:
     - path: data/processed/validate.pkl
-      md5: f827e907b32666ec83af08819d4560b1
-      size: 645588
+      md5: c7bd027b801b135c90ea874d81fe0e99
+      size: 123060
     - path: predictions/validate/catboost_native.json
-      md5: 3feb2c2185e42551509edc6d26720e83
-      size: 28643
+      md5: 164d7e904d1d804db04cb0312c408a54
+      size: 5721
     - path: predictions/validate/catboost_tr.json
-      md5: 7dc0b277648a2571ca87098e5541b5f3
-      size: 28609
+      md5: a5845dee409816dde797fa61c623efc4
+      size: 5709
     - path: predictions/validate/extra_trees.json
-      md5: f634e955f7469207dd99df9a6df34614
-      size: 15548
+      md5: 37c90d88a0f67e9d851180f9056a743a
+      size: 5442
     - path: src/models/common.py
       md5: ecdb47b691bf5bcc2b0601e78c72f09e
       size: 852
@@ -210,14 +214,14 @@ stages:
       size: 1894
     outs:
     - path: metrics/validate/catboost_native.json
-      md5: fb8358b552a4b45b9efa8e193b1ece32
-      size: 62
+      md5: d13e51d9d818405bfd238acfbc79666f
+      size: 61
     - path: metrics/validate/catboost_tr.json
-      md5: 0863112989a4c5be3ef5cd20f8080372
-      size: 60
+      md5: cd4e2874a98ee3b15714efa6fd7ed125
+      size: 61
     - path: metrics/validate/extra_trees.json
-      md5: 92dbc9251ca55a55802555e957053821
-      size: 60
+      md5: 24d8be865852fb3037248c475f06251a
+      size: 59
   preprocess_validate:
     cmd: python -m src.data.make_dataset data/raw/test.csv data/processed/validate.pkl
       --input_answers=data/raw/sample_submission.csv

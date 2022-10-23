@@ -31,17 +31,19 @@ def make_catboost_pipeline(
     )
 
     pipe_steps: List[Tuple[str, Any]] = [("reg", cb)]
-    if feature_tr != None:
-        pipe_steps.insert(0, ("col_tr", feature_tr))
-        # X_val = feature_tr.transform(X_val)
-
     pipe = Pipeline(steps=pipe_steps)
-
-    pipe.fit(
-        X=X_train,
-        y=y_train,
-        # reg__eval_set=(X_val, y_val),
-        # reg__use_best_model=True,
-    )
+    if feature_tr != None:
+        feature_tr.fit(X)
+        pipe_steps.insert(0, ("col_tr", feature_tr))
+        X_val = feature_tr.transform(X_val)
+        X_train = feature_tr.transform(X_train)
+        cb.fit(X_train, y_train, eval_set=(X_val, y_val), use_best_model=True)
+    else:
+        pipe.fit(
+            X=X_train,
+            y=y_train,
+            reg__eval_set=(X_val, y_val),
+            reg__use_best_model=True,
+        )
 
     return pipe

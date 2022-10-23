@@ -1,21 +1,12 @@
 stages:
   preprocess_train:
-    cmd: python -m src.data.make_dataset data/raw/train.csv data/processed/train.pkl
+    cmd: python -m src.data.make_dataset data/raw/train.csv data/processed/train.pkl data/processed/validate.pkl
     deps:
     - src/data/make_dataset.py
     - src/data/preprocess.py
     - data/raw/train.csv
     outs:
     - data/processed/train.pkl
-
-  preprocess_validate:
-    cmd: python -m src.data.make_dataset data/raw/test.csv data/processed/validate.pkl --input_answers=data/raw/sample_submission.csv
-    deps:
-    - src/data/make_dataset.py
-    - src/data/preprocess.py
-    - data/raw/test.csv
-    - data/raw/sample_submission.csv
-    outs:
     - data/processed/validate.pkl
 
   train:
@@ -61,7 +52,7 @@ stages:
     - metrics/test/extra_trees.json
 
   predict_validate:
-    cmd: python -m src.models.run_predict models data/processed/test.pkl predictions/validate --split=False
+    cmd: python -m src.models.run_predict models data/processed/validate.pkl predictions/validate --split=False
     deps:
     - src/models/common.py
     - src/models/run_predict.py
@@ -75,7 +66,7 @@ stages:
     - predictions/validate/extra_trees.json
   
   score_validate:
-    cmd: python -m src.models.run_score predictions/validate data/processed/test.pkl metrics/validate --split=False
+    cmd: python -m src.models.run_score predictions/validate data/processed/validate.pkl metrics/validate --split=False
     deps:
     - src/models/common.py
     - src/models/run_score.py

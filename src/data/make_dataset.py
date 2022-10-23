@@ -14,10 +14,13 @@ from src.data.preprocess import preprocess
 
 @click.command()
 @click.argument("input_filepath", type=click.Path(exists=True))
-@click.argument("output_filepath", type=click.Path())
-@click.option("--input_answers", type=click.Path(exists=True), default=None)
+@click.argument("output_train_filepath", type=click.Path())
+@click.argument("output_validate_filepath", type=click.Path())
+# @click.option("--input_answers", type=click.Path(exists=True), default=None)
 def main(
-    input_filepath: str, output_filepath: str, input_answers: Optional[str] = None
+    input_filepath: str,
+    output_train_filepath: str,
+    output_validate_filepath: str,
 ):
     """Runs data processing scripts to turn raw data from (../raw) into
     cleaned data ready to be analyzed (saved in ../processed).
@@ -27,15 +30,14 @@ def main(
 
     logging.info("Loading dataset")
     df = pd.read_csv(input_filepath)
-    if input_answers != None:
-        df_y = pd.read_csv(input_answers)
-        df_y = df_y.drop("Id", axis=1)
-        df = pd.concat([df, df_y], axis=1)
     logging.info("Processing dataset")
     df = preprocess(df)
+    df_train, df_val = train_test_split(df, test_size=0.2)
     logging.info("Saving dataset")
-    with open(output_filepath, "wb") as f:
-        pickle.dump(df, f)
+    with open(output_train_filepath, "wb") as f:
+        pickle.dump(df_train, f)
+    with open(output_validate_filepath, "wb") as f:
+        pickle.dump(df_val, f)
     logging.info("Complete")
 
 

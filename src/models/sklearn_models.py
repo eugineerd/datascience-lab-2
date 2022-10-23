@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
 from src.models.common import default_train_split
 import src.cfg as cfg
 
@@ -11,7 +12,6 @@ def make_extra_trees_pipeline(
     y: pd.DataFrame,
     feature_tr: ColumnTransformer,
 ) -> Pipeline:
-    X_train, X_val, y_train, y_val = default_train_split(X, y)
     pipe = Pipeline(
         steps=[
             ("col_tr", feature_tr),
@@ -23,6 +23,14 @@ def make_extra_trees_pipeline(
             ),
         ]
     )
-    pipe.fit(X=X_train, y=y_train)
 
-    return pipe
+    param_grid = {
+        # "reg__n_estimators": (80, 100, 120, 300),
+        # "reg__max_features": ("auto", "log2", "sqrt", 1.0),
+        "reg__bootstrap": (True, False),
+        "reg__min_samples_leaf": (1, 2),
+    }
+    gs = GridSearchCV(pipe, param_grid=param_grid, cv=5, refit=True)
+    gs.fit(X, y)
+
+    return gs.best_estimator_  # type: ignore
