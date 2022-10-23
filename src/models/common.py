@@ -16,7 +16,7 @@ def default_train_split(
 
 
 def load_train_dataset(path: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    with open("data/processed/train.pkl", "rb") as f:
+    with open(path, "rb") as f:
         df = pickle.load(f)
     X = df.drop(["SalePrice"], axis=1)
     y = df["SalePrice"]
